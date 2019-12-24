@@ -75,6 +75,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 			c3/c1;
    
    VectorXd y = z - hx;
+   if((y(1) < -3.14) || (y(1) > 3.14) )
+		cout << "Phi value in rad = " << y(1) << endl;
    MatrixXd Hjt = Hj.transpose();
 /*   cout << "Hj size = "<< Hj.size() << endl;
    cout << "P_ size = "<< P_.size() << endl;

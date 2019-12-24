@@ -88,8 +88,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       //         and initialize state.
 	ekf_.x_ << 	measurement_pack.raw_measurements_[0]*cos(measurement_pack.raw_measurements_[1]),
 				measurement_pack.raw_measurements_[0]*sin(measurement_pack.raw_measurements_[1]),
-				0,
-				0;
+				measurement_pack.raw_measurements_[2]*cos(measurement_pack.raw_measurements_[1]),
+				measurement_pack.raw_measurements_[2]*sin(measurement_pack.raw_measurements_[1]);
 
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
@@ -169,6 +169,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   
 
   // print the output
-  cout << "x_ = " << ekf_.x_ << endl;
-  cout << "P_ = " << ekf_.P_ << endl;
+	if (measurement_pack.sensor_type_ == MeasurementPackage::LASER)
+		cout << "Current = " << measurement_pack.raw_measurements_[1] << endl;
+	else
+		cout << "Current = " << measurement_pack.raw_measurements_[0]*sin(measurement_pack.raw_measurements_[1]) << endl;
+  cout << "x_ = " << ekf_.x_(0) << endl;
+  //cout << "P_ = " << ekf_.P_ << endl;
 }
