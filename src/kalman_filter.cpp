@@ -1,8 +1,11 @@
 #include "kalman_filter.h"
 #include "tools.h"
+#include <iostream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+
+using namespace std;
 
 /* 
  * Please note that the Eigen library does not initialize 
@@ -38,6 +41,11 @@ void KalmanFilter::Update(const VectorXd &z) {
    VectorXd z_pred = H_ * x_;
    VectorXd y = z - z_pred;
    MatrixXd Ht = H_.transpose();
+/*
+   cout << "H --  lidar  size = "<< H_.size() << endl;
+   cout << "P_ -- lidar size = "<< P_.size() << endl;
+   cout << "R  -- lidar size = "<< R_.size() << endl;
+*/
    MatrixXd S = H_ * P_ * Ht + R_;
    MatrixXd Si = S.inverse();
    MatrixXd PHt = P_ * Ht;
@@ -54,20 +62,24 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
    * TODO: update the state by using Extended Kalman Filter equations
    */
    Tools tools;
-   MatrixXd Hj = tools.CalculateJacobian(const Eigen::VectorXd& x_);
+   MatrixXd Hj = tools.CalculateJacobian(x_);
    
    float c1 = sqrt(x_(0)*x_(0) + x_(1)*x_(1));
-   float c2 = atan2(x_(1)/x_(0));
+   float c2 = atan2(x_(1),x_(0));
    float c3 = x_(0)*x_(2) + x_(1)*x_(3);
    
-   VectorXd hx =	c1,
-					c2,
-					c3/c1;
-					
+   Eigen::VectorXd hx;
+   hx = VectorXd(3);
+   hx <<	c1,
+			c2,
+			c3/c1;
    
    VectorXd y = z - hx;
    MatrixXd Hjt = Hj.transpose();
-   MatrixXd S = Hj * P_ * Hjt + R_;
+/*   cout << "Hj size = "<< Hj.size() << endl;
+   cout << "P_ size = "<< P_.size() << endl;
+   cout << "R size = "<< R_.size() << endl;
+*/   MatrixXd S = Hj * P_ * Hjt + R_;
    MatrixXd Si = S.inverse();
    MatrixXd PHjt = P_ * Hjt;
    MatrixXd K = PHjt * Si;
