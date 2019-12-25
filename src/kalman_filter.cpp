@@ -57,9 +57,9 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
    * TODO: update the state by using Extended Kalman Filter equations
    */
    
-   float c1 = sqrt(x_(0)*x_(0) + x_(1)*x_(1));
-   float c2 = atan2(x_(1),x_(0));
-   float c3 = x_(0)*x_(2) + x_(1)*x_(3);
+   double c1 = sqrt(x_(0)*x_(0) + x_(1)*x_(1));
+   double c2 = atan2(x_(1),x_(0));
+   double c3 = x_(0)*x_(2) + x_(1)*x_(3);
    
    Eigen::VectorXd hx;
    hx = VectorXd(3);
