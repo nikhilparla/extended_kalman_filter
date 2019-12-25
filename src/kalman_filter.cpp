@@ -7,6 +7,8 @@ using Eigen::VectorXd;
 
 using namespace std;
 
+#define M_PI           3.14159265358979323846  /* pi */
+
 /* 
  * Please note that the Eigen library does not initialize 
  *   VectorXd or MatrixXd objects with zeros upon creation.
@@ -68,6 +70,12 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 			c3/c1;
    
    VectorXd y = z - hx;
+   
+   while(y(1) > M_PI)
+	   y(1) -= 2*M_PI;
+	while(y(1) < (-1 * M_PI))
+		y(1) += 2*M_PI;
+   
    MatrixXd Ht = H_.transpose();
    MatrixXd S = H_ * P_ * Ht + R_;
    MatrixXd Si = S.inverse();
